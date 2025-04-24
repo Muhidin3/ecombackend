@@ -10,7 +10,7 @@ async function connectDB(){
         return
     }
     try {
-        mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/Ecom')
+        mongoose.connect('mongodb+srv://muhidinshemsu3:hpInIu1U0hHJPuAS@cluster0.cd40j.mongodb.net/Ecom')
         console.log(`mongodb connected successfuly ${mongoose.connection.host}`)
         
     } catch (error) {
