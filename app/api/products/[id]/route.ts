@@ -12,6 +12,16 @@ import { setCorsHeaders } from "../../config/cors";
 interface Params{
     params:Promise<{id:string}>
 }
+export async function OPTIONS() {
+  const res = new NextResponse(null);
+  return setCorsHeaders(res);
+}
+
+
+
+
+
+
 
 export async function GET(req:NextRequest,{params}: {params: Promise<{ id: string }>}) {
   connectDB()
