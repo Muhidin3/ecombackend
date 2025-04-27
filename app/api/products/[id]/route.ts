@@ -6,12 +6,14 @@ import fs from 'fs'
 import User from "../../models/users.model";
 import { IncomingMessage } from "http";
 import { Readable } from "stream";
+import connectDB from "../../config/db";
 
 interface Params{
     params:Promise<{id:string}>
 }
 
 export async function GET(req:NextRequest,{params}: {params: Promise<{ id: string }>}) {
+  connectDB()
   const id = (await params).id
     try {
         const res = await Product.findById(id)
@@ -50,6 +52,7 @@ async function readableStreamToNodeReadable(stream: ReadableStream<Uint8Array>):
 
 
 export async function PATCH(req:NextRequest,{params}:Params) {
+  connectDB()
     const {id} = await params
     const form = formidable({ multiples: true });
     
@@ -112,6 +115,7 @@ export async function PATCH(req:NextRequest,{params}:Params) {
 
 
 export async function DELETE(req:Request,{params}:Params) {
+  connectDB()
   const {id} = await params
   
   try {
