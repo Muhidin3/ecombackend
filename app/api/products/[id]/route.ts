@@ -119,10 +119,10 @@ export async function DELETE(req:Request,{params}:Params) {
   
   try {
       const product = await Product.findByIdAndDelete(id)
-      return NextResponse.json({message:'Product deleted', product})
-      
+      const res = NextResponse.json({message:'Product deleted', product})
+      return setCorsHeaders(res)
   } catch (error) {
-      return NextResponse.json({message:'we got an error do something', error})
-      
+    const res = NextResponse.json({message:'we got an error do something', error})
+      return setCorsHeaders(res)
   }
 }
