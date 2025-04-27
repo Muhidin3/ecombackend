@@ -7,6 +7,13 @@ import path from 'path';
 import fs from 'fs'
 import { IncomingMessage } from 'http';
 import connectDB from '../config/db';
+import { setCorsHeaders } from '../config/cors';
+
+export async function OPTIONS() {
+  const res = new NextResponse(null);
+  return setCorsHeaders(res);
+}
+
 
 export async function GET() {
   connectDB()
@@ -37,6 +44,7 @@ async function readableStreamToNodeReadable(stream: ReadableStream<Uint8Array>):
 }
 
 export async function POST(req:Request) {
+  await connectDB()
   
   const form = formidable({ multiples: true });
   const nodeStream = await readableStreamToNodeReadable(req.body!) 
@@ -77,7 +85,8 @@ export async function POST(req:Request) {
        const newProduct = new Product(editedData);
        const res = await newProduct.save();
 
-       return resolve(NextResponse.json({ message: 'upload received',res:res }));
+       const ress = NextResponse.json({ message: 'upload received',res:res })
+       return resolve(setCorsHeaders(ress));
 
       }
 

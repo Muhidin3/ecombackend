@@ -100,7 +100,8 @@ export async function PATCH(req:NextRequest,{params}:Params) {
          editedData['image'] = image.newFilename
          const newProduct = await Product.findByIdAndUpdate(id,editedData);
   
-         return resolve(NextResponse.json({ message: 'Edited successfully',res:newProduct }));
+         const res = NextResponse.json({ message: 'Edited successfully',res:newProduct })
+         return resolve(setCorsHeaders(res));
   
         }else{
             const editedData:Record<string,unknown> = {}
