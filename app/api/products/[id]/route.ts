@@ -7,6 +7,7 @@ import User from "../../models/users.model";
 import { IncomingMessage } from "http";
 import { Readable } from "stream";
 import connectDB from "../../config/db";
+import { setCorsHeaders } from "../../config/cors";
 
 interface Params{
     params:Promise<{id:string}>
@@ -52,7 +53,7 @@ async function readableStreamToNodeReadable(stream: ReadableStream<Uint8Array>):
 
 
 export async function PATCH(req:NextRequest,{params}:Params) {
-  connectDB()
+  await connectDB()
     const {id} = await params
     const form = formidable({ multiples: true });
     
@@ -100,7 +101,8 @@ export async function PATCH(req:NextRequest,{params}:Params) {
              }
              const newProduct = await Product.findByIdAndUpdate(id,editedData);
              
-             return resolve(NextResponse.json({ message: 'Edited successfully',res:newProduct }));
+            const res = NextResponse.json({ message: 'Edited successfully',res:newProduct })
+             return resolve(setCorsHeaders(res));
 
         }
   
@@ -108,10 +110,7 @@ export async function PATCH(req:NextRequest,{params}:Params) {
     })
   })
   
-  
-
-    // return NextResponse.json({ message: 'Product added' });
-  }
+}
 
 
 export async function DELETE(req:Request,{params}:Params) {

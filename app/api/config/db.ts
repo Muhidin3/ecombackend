@@ -10,12 +10,13 @@ async function connectDB(){
         return
     }
     try {
-        mongoose.connect(process.env.MONGO_URL as string)
+        await mongoose.connect(process.env.MONGO_URL as string)
         console.log(`mongodb connected successfuly ${mongoose.connection.host}`)
         
     } catch (error) {
         console.log(`error connecting to the server: ${error}`)
     }
+    return
 }
 
 
