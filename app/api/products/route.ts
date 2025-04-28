@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Product from '../models/other.model';
 import { Readable } from 'stream';
 import formidable from 'formidable';
@@ -15,9 +15,58 @@ export async function OPTIONS() {
 }
 
 
-export async function GET() {
+export async function GET(req:NextRequest) {
   connectDB()
-  const res = await Product.find()
+  const { searchParams } = new URL(req.url);
+  const category = searchParams.get('category') || ''
+  const subcategory = searchParams.get('subcategory')|| ''
+  const condition = searchParams.get('condition')|| ''
+  const maxPrice = searchParams.get('maxPrice')|| ''
+  const minPrice = searchParams.get('minPrice')|| ''
+  const recentlyPosted = searchParams.get('recentlyPosted')|| ''
+  console.log('category',category)
+
+  const query: any = {};
+
+  // Category filter
+  if (category) {
+    query.category = category;
+  }
+
+  // Subcategory filter
+  if (subcategory) {
+    query.subcategory = subcategory;
+  }
+
+  // Price filter
+  if (minPrice || maxPrice) {
+    query.price = {};
+    if (minPrice) {
+      query.price.$gte = Number(minPrice);
+    }
+    if (maxPrice) {
+      query.price.$lte = Number(maxPrice);
+    }
+  }
+
+  // Condition filter
+  if (condition) {
+    query.condition = condition; // 'New' or 'Used'
+  }
+
+  // Now sorting
+  let sortOption = {};
+  if (recentlyPosted === 'newest') {
+    sortOption = { createdAt: -1 }; // Newest first
+  } else if (recentlyPosted === 'oldest') {
+    sortOption = { createdAt: 1 }; // Oldest first
+  }
+
+
+
+
+
+  const res = await Product.find(query).sort(sortOption)
   if(!res){
     return NextResponse.json({ message: 'NO product',data:[{}] });
   }
