@@ -32,7 +32,7 @@ export async function GET(req:NextRequest,{params}: {params: Promise<{ id: strin
         const data = {...res}
         data.user = user.name
         data.userid = user._id
-        return NextResponse.json({message:'got it',res})
+        return NextResponse.json({message:'got it',data})
         
     } catch (error) {
         console.error(error)
